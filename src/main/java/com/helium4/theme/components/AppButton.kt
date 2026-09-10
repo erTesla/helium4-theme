@@ -138,6 +138,19 @@ public fun AppButton(
         FontWeight.Medium
     }
 
+    // Gradient fill for primary CTAs on themes that supply one (Cyberpunk, Maximalism,
+    // Aurora). Only applied on a filled non-sculpted primary button so the gradient is
+    // never competing with themedSurface's own treatment.
+    val accentBrush: Brush? = if (
+        filledContainer && !sculpted &&
+        style == AppButtonVariant.PRIMARY && enabled &&
+        theme.accentGradient != null
+    ) {
+        Brush.linearGradient(theme.accentGradient!!)
+    } else {
+        null
+    }
+
     val container = if (sculpted) {
         // One shared implementation of bevels, sheens and offset blocks - the button
         // never rolls its own shadow logic. Holding it presses the surface *into* the
@@ -169,7 +182,11 @@ public fun AppButton(
         Modifier
             .then(
                 if (containerColor != Color.Transparent) {
-                    Modifier.background(containerColor, theme.shapes.button)
+                    if (accentBrush != null) {
+                        Modifier.background(accentBrush, theme.shapes.button)
+                    } else {
+                        Modifier.background(containerColor, theme.shapes.button)
+                    }
                 } else {
                     Modifier
                 }

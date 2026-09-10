@@ -17,15 +17,22 @@ public object ThemeRegistry {
 
     public val all: List<ThemeId> = ThemeId.entries.toList()
 
+    private val cache = java.util.concurrent.ConcurrentHashMap<Pair<ThemeId, Boolean>, AppTheme>()
+
     /**
      * Resolves a theme. Falls back to DEFAULT if a family file somehow does not cover an
      * id, so an incomplete registry degrades to the spec design system rather than crashing.
+     *
+     * Results are memoised: each (id, dark) pair is computed once and reused. AppTheme is
+     * @Immutable and theme definitions are deterministic, so this is always safe.
      */
     public fun resolve(id: ThemeId, dark: Boolean): AppTheme =
-        coreTheme(id, dark)
-            ?: surfaceTheme(id, dark)
-            ?: editorialTheme(id, dark)
-            ?: expressiveTheme(id, dark)
-            ?: seasonalTheme(id, dark)
-            ?: coreTheme(ThemeId.DEFAULT, dark)!!
+        cache.computeIfAbsent(id to dark) { (resolveId, resolveDark) ->
+            coreTheme(resolveId, resolveDark)
+                ?: surfaceTheme(resolveId, resolveDark)
+                ?: editorialTheme(resolveId, resolveDark)
+                ?: expressiveTheme(resolveId, resolveDark)
+                ?: seasonalTheme(resolveId, resolveDark)
+                ?: coreTheme(ThemeId.DEFAULT, resolveDark)!!
+        }
 }

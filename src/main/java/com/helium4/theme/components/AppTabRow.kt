@@ -6,10 +6,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
 import androidx.compose.material3.TabRowDefaults
-import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -33,15 +32,15 @@ public fun AppTabRow(
 ) {
     val theme = LocalAppTheme.current
 
-    TabRow(
+    PrimaryTabRow(
         selectedTabIndex = selectedIndex.coerceIn(0, (tabs.size - 1).coerceAtLeast(0)),
         modifier = modifier.fillMaxWidth(),
         containerColor = Color.Transparent,
         contentColor = theme.textPrimary,
-        indicator = { tabPositions ->
-            if (selectedIndex in tabPositions.indices) {
-                TabRowDefaults.Indicator(
-                    modifier = Modifier.tabIndicatorOffset(tabPositions[selectedIndex]),
+        indicator = {
+            if (selectedIndex in 0 until tabs.size) {
+                TabRowDefaults.SecondaryIndicator(
+                    modifier = Modifier.tabIndicatorOffset(selectedIndex),
                     // Off the divider token, not the border one, so a theme with no card
                     // outline still marks its selected tab.
                     height = theme.dividerThickness * 2,

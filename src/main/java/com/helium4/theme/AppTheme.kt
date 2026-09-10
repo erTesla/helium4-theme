@@ -212,6 +212,17 @@ public data class AppTheme(
     val backgroundGradient: List<Color>? = null,
 
     /**
+     * Two-stop (or more) gradient for primary CTAs — the sweep from primary to a shifted
+     * complementary or brightened tone used by Cyberpunk, Maximalism, and Aurora on
+     * buttons and FABs. Null on every flat/restrained theme. A consumer that sets this and
+     * leaves [backgroundGradient] null gets gradient buttons against a solid background.
+     *
+     * Adding this token is a **minor** bump (binary-breaking on `copy()`); the default keeps
+     * all existing theme definitions source-compatible.
+     */
+    val accentGradient: List<Color>? = null,
+
+    /**
      * Light spill under primary actions, for the themes whose accent is meant to read as
      * emitted rather than printed - neon on Cyberpunk, aurora green on Aurora. Null means
      * no glow, which is the correct answer for most themes.
