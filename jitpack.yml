@@ -23,4 +23,4 @@ before_install:
   - sdkmanager "platforms;android-37" "build-tools;37.0.0" || true
 
 install:
-  - ./gradlew :theme:publishToMavenLocal -Dorg.gradle.jvmargs=-Xmx2g --no-daemon
+  - ./gradlew publishToMavenLocal -Dorg.gradle.jvmargs=-Xmx2g --no-daemon
