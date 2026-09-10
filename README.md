@@ -1,5 +1,7 @@
 # Helium4 Theme
 
+[![](https://jitpack.io/v/erTesla/helium4-theme.svg)](https://jitpack.io/#erTesla/helium4-theme)
+
 A standalone, publishable Android Compose design-system library.  
 23 bundled themes, token-based, zero network dependencies, zero analytics.
 
@@ -289,11 +291,6 @@ Values scale with `theme.spacingDensity` (COMPACT / NORMAL / COMFORTABLE).
 | `AppTabRow` | Horizontal tab strip |
 | `ThemeSwatchCard` | Mini theme preview (for pickers) |
 
-Debug only (excluded from release builds):
-
-| Component | Purpose |
-|-----------|---------|
-
 ---
 
 ## Previews
@@ -400,36 +397,20 @@ The library enforces these by convention (enforced through code review / `themed
 ### Maven Central (recommended for production)
 
 1. Register a Sonatype namespace (`com.helium4`)
-2. Add the `maven-publish` plugin and signing config to `theme/build.gradle.kts`
+2. Add signing config to `build.gradle.kts` (the library is the root project — there is no subproject to scope with `:theme:`)
 3. Set `GROUP`, `ARTIFACT`, `VERSION` in `gradle.properties`
-4. Run `./gradlew :theme:publishToSonatype closeAndReleaseStagingRepository`
+4. Run `./gradlew publishToSonatype closeAndReleaseStagingRepository`
 
-A minimal `maven-publish` block for the module:
+The `maven-publish` block is already in `build.gradle.kts`; extend it with the Sonatype repository and a signing block.
 
-```kotlin
-// theme/build.gradle.kts
-publishing {
-    publications {
-        register<MavenPublication>("release") {
-            groupId = "com.helium4"
-            artifactId = "theme"
-            version = "1.0.0"
-            afterEvaluate { from(components["release"]) }
-            pom {
-                name = "Helium4 Theme"
-                description = "23-theme Compose design system, offline-first, zero analytics"
-                url = "https://github.com/erTesla/helium4-theme"
-                licenses {
-                    license {
-                        name = "MIT License"
-                        url = "https://opensource.org/licenses/MIT"
-                    }
-                }
-            }
-        }
-    }
-}
-```
+---
+
+## Known issues / roadmap
+
+| # | Component | Issue |
+|---|-----------|-------|
+| 1 | `AppTabRow` | Uses deprecated `TabRow` / `TabRowDefaults.Indicator` / `tabIndicatorOffset`. Replacement is `PrimaryTabRow` + `TabIndicatorScope.tabIndicatorOffset`. Tracked for the next minor release. |
+| 2 | `AppTooltip` | Uses deprecated `rememberPlainTooltipPositionProvider`. Replacement is `rememberTooltipPositionProvider`. Tracked for the next minor release. |
 
 ---
 
