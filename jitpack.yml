@@ -1,0 +1,26 @@
+# JitPack build configuration.
+#
+# The `install:` block is not optional. JitPack's default for a project without one is
+# the legacy `gradlew install`, a task that does not exist on Gradle 9 — the build would
+# fail before it compiled anything.
+#
+# `jdk: openjdk21` because this project verifiably builds only on JDK 21 (Android Studio's
+# bundled JBR 21). AGP 9.2.1's own metadata declares Java 11 bytecode, which says nothing
+# about the JDK the toolchain requires.
+#
+# JitPack invokes the build with `-Pgroup=com.github.<user> -Pversion=<tag>`; the module's
+# build.gradle.kts reads both via `providers.gradleProperty` and never hardcodes them.
+#
+# The heap is lowered from this repo's local -Xmx4096m: JitPack builders are shared, and
+# the Kotlin compiler runs in a second daemon on top of the Gradle daemon.
+jdk:
+  - openjdk21
+
+before_install:
+  # compileSdk 37 must be installed with licences accepted; JitPack's image may not carry
+  # it. Both commands are no-ops if the platform is already present.
+  - yes | sdkmanager --licenses > /dev/null || true
+  - sdkmanager "platforms;android-37" "build-tools;37.0.0" || true
+
+install:
+  - ./gradlew :theme:publishToMavenLocal -Dorg.gradle.jvmargs=-Xmx2g --no-daemon

@@ -1,0 +1,28 @@
+*.iml
+.gradle
+/local.properties
+/.idea
+.DS_Store
+build/
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+
+# Deliberately NOT a bare `*.png`.
+#
+# The repo this was extracted from ignored every PNG, which silently swallowed the
+# screenshot baselines under src/test/screenshots/ — the one thing in a design-system repo
+# that must be committed, since they *are* the visual regression suite. Ad-hoc screenshots
+# dropped at the repo root are the transient ones.
+/*.png
+
+# JVM crash dumps, occasionally left behind by a Gradle or Kotlin daemon.
+hs_err_pid*.log
+replay_pid*.log
+
+# Roborazzi writes comparison and diff images next to the baselines on a failing run.
+# The baselines themselves are tracked; these are per-run artefacts.
+**/build/outputs/roborazzi/
+*_compare.png
+*_actual.png
